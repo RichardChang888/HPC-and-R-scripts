@@ -1,0 +1,17 @@
+#!/bin/bash 
+
+#PBS -N 04_fastqc 
+#PBS -l walltime=24:00:00 
+#PBS -l ncpus=32 
+#PBS -l mem=100GB 
+#PBS -e myprog_04MonocultureBR2_Output.err 
+#PBS -o myprog_04MonocultureBR2_Output.out 
+#PBS -q bix 
+#PBS -M 21802475@sun.ac.za 
+#PBS -m abe
+
+cd $PBS_O_WORKDIR 
+
+module load app/fastqc/0.11.5 
+
+fastqc -o fastqc_04_out *.fastq.gz

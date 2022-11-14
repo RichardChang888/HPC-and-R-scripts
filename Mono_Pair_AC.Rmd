@@ -1,0 +1,121 @@
+---
+title: "Untitled"
+author: "Kuan-Liuh Richard Chang"
+date: "2022-09-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load library}
+
+library(knitr)
+library(ggplot2)
+library(tibble)
+library(readr)
+library(stringr)
+library(tidyverse)
+library(DBI)
+library(RSQLite)
+library(DESeq2)
+library(apeglm)
+library(EnhancedVolcano)
+
+```
+
+```{r load count table}
+
+setwd("C:/Users/Richard/Downloads/SU Honors/Data/Mono_Pair_AC")
+countfile <- "featureCounts_output.tsv"
+countdata <- read.table(file=countfile, header = TRUE, row.names = 1)
+countdata
+
+```
+```{r load Sample table}
+
+sample <- names(countdata)
+sample
+
+sampletable <- tibble::as.tibble(sample[6:40])
+sampletable
+
+sampledata <- sampletable %>% mutate(Treatment = c("thuMBR1","thuMBR1","thuMBR1","thuMBR1","thuMBR2","thuMBR2","thuMBR2","thuMBR2","thuMBR3","thuMBR3","thuMBR3","thuMBR3","thuMBR4","thuMBR4","thuMBR4","thuMBR4","thuPBR1","thuPBR1","thuPBR1","thuPBR1","thuPBR1","thuPBR2","thuPBR2","thuPBR2","thuPBR2","thuPBR2","thuPBR3","thuPBR3","thuPBR3","thuPBR3","thuPBR3","thuPBR4","thuPBR4","thuPBR4","thuPBR4"))
+write.table(sampledata,file="C:/Users/Richard/Downloads/SU Honors/Data/Mono_Pair_AC/sampletable.tsv",quote = FALSE,col.names = FALSE,row.names = FALSE,sep = "\t")
+
+```
+
+```{r load DESeq2}
+
+samplefile<-"C:/Users/Richard/Downloads/SU Honors/Data/Mono_Pair_AC/sampletable.tsv"
+coldata<-read.table(file=samplefile, sep="\t", header=FALSE, col.names = as.factor(c("","treatment")), row.names=1)
+countfile<-"C:/Users/Richard/Downloads/SU Honors/Data/Mono_Pair_AC/featureCounts_output.tsv"
+countdata<-read.table(file=countfile, header=TRUE, row.names = 1)
+countdata<-countdata[-c(1:5)] 	# drop the unneeded columns
+ncol(countdata)
+nrow(coldata)
+dds <- DESeqDataSetFromMatrix(countData = countdata, 
+                              colData = coldata, 
+                              design = ~treatment)
+dds$treatment <- relevel(dds$treatment, ref="thuMBR1","thuMBR2","thuMBR3","thuMBR4" )
+dds<-DESeq(dds)
+res <- results(dds)
+sorted_res <- res[order(res$log2FoldChange),] # sort ascending on log2FoldChange
+
+```
+```{r filter padj}
+
+sigs <- na.omit(sorted_res)
+sigs <- sigs[sigs$padj < 0.05,]
+write.csv(sigs,"DGE_list_padj.csv")
+
+```
+
+```{r filter log2FoldChange less than -1}
+
+sigs <- na.omit(sorted_res)
+sigs1 <- sigs[sigs$log2FoldChange <= -1,]
+write.csv(sigs1,"DGE_list_log2FoldChangeLessThanEqualsNegativeOne.csv")
+
+```
+
+```{r filter log2FoldChange less than -1 padj}
+
+sigs <- na.omit(sorted_res)
+sigs1 <- sigs[sigs$log2FoldChange <= -1,]
+sigs1padj <- sigs1[sigs1$padj < 0.05,]
+write.csv(sigs1padj,"DownRegulated.csv")
+
+```
+
+```{r filter log2FoldChange bigger than 1}
+
+sigs <- na.omit(sorted_res)
+sigs2 <- sigs[sigs$log2FoldChange >= 1,]
+write.csv(sigs2,"DGE_list_log2FoldChangeBiggerEqualsThanOne.csv")
+
+```
+
+```{r filter log2FoldChange bigger than 1 padj}
+
+sigs <- na.omit(sorted_res)
+sigs2 <- sigs[sigs$log2FoldChange >= 1,]
+sigs2padj <- sigs2[sigs2$padj < 0.05,]
+write.csv(sigs2padj,"UpRegulated.csv")
+
+```
+
+```{r load MA Plot}
+
+resLFC <- lfcShrink(dds,coef=2,type="apeglm")
+plotMA(resLFC)
+
+```
+
+```{r load Volcano Plot}
+
+EnhancedVolcano(res,lab = rownames(res),ylim=c(0, 400),x = 'log2FoldChange',
+y = 'pvalue')
+
+```

@@ -1,0 +1,21 @@
+#!/bin/bash 
+
+#PBS -N STAR_Mapping_04 
+#PBS -l walltime=24:00:00 
+#PBS -l ncpus=32
+#PBS -l mem=150GB
+#PBS -e myprog_STAR_Mapping_Output.err 
+#PBS -o myprog_STAR_Mapping_Output.out 
+#PBS -q bix 
+#PBS -M 21802475@sun.ac.za 
+#PBS -m abe
+
+cd $PBS_O_WORKDIR 
+
+module load app/STAR 
+
+for i in {159,163,164,191} 
+do 
+STAR --runThreadN 32 --runMode alignReads --genomeDir ~/Honors/Data/04_Monoculture_BR2/genome_index --readFilesIn ~/Honors/Data/04_Monoculture_BR2/04_thu${i}_IX_RNA_004_trimmed.fq --outSAMtype BAM SortedByCoordinate --outFileNamePrefix 04_thu${i}_IX_RNA_004_trimmed_ --limitBAMsortRAM 5343855585
+done
+wait

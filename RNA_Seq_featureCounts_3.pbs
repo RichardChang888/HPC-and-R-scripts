@@ -1,0 +1,19 @@
+#!/bin/bash 
+
+#PBS -N featureCounts 
+#PBS -l walltime=1:00:00 
+#PBS -l ncpus=32 
+#PBS -l mem=250GB 
+#PBS -e myprog_featureCounts.err 
+#PBS -o myprog_featureCounts.out 
+#PBS -q bix
+#PBS -M 21802475@sun.ac.za 
+#PBS -m abe
+
+cd $PBS_O_WORKDIR 
+
+path=~/Honors/Data/Monoculture_Pairwise_AB/ 
+module load app/subread/2.0.2 
+featureCounts --primary -a /home/21802475/Honors/Data/Monoculture_Pairwise_AB/YeastGenome.gtf -o featureCounts_output.tsv ${path}01_thu159MBR1_IX_RNA_001_trimmed_Aligned.sortedByCoord.out.bam ${path}01_thu163MBR1_IX_RNA_001_trimmed_Aligned.sortedByCoord.out.bam ${path}01_thu164MBR1_IX_RNA_001_trimmed_Aligned.sortedByCoord.out.bam ${path}01_thu190MBR1_IX_RNA_001_trimmed_Aligned.sortedByCoord.out.bam ${path}04_thu159MBR2_IX_RNA_004_trimmed_Aligned.sortedByCoord.out.bam ${path}04_thu163MBR2_IX_RNA_004_trimmed_Aligned.sortedByCoord.out.bam ${path}04_thu164MBR2_IX_RNA_004_trimmed_Aligned.sortedByCoord.out.bam ${path}04_thu191MBR2_IX_RNA_004_trimmed_Aligned.sortedByCoord.out.bam ${path}07_thu159MBR3_IX_RNA_007_trimmed_Aligned.sortedByCoord.out.bam ${path}07_thu163MBR3_IX_RNA_007_trimmed_Aligned.sortedByCoord.out.bam ${path}07_thu164MBR3_IX_RNA_007_trimmed_Aligned.sortedByCoord.out.bam ${path}07_thu191MBR3_IX_RNA_007_trimmed_Aligned.sortedByCoord.out.bam ${path}10_thu159MBR4_IX_RNA_010_trimmed_Aligned.sortedByCoord.out.bam ${path}10_thu163MBR4_IX_RNA_010_trimmed_Aligned.sortedByCoord.out.bam ${path}10_thu164MBR4_IX_RNA_010_trimmed_Aligned.sortedByCoord.out.bam ${path}10_thu191MBR4_IX_RNA_010_trimmed_Aligned.sortedByCoord.out.bam ${path}13_thu159PBR1_IX_RNA_013_trimmed_Aligned.sortedByCoord.out.bam ${path}13_thu166PBR1_IX_RNA_013_trimmed_Aligned.sortedByCoord.out.bam ${path}13_thu167PBR1_IX_RNA_013_trimmed_Aligned.sortedByCoord.out.bam ${path}13_thu188PBR1_IX_RNA_013_trimmed_Aligned.sortedByCoord.out.bam ${path}13_thu190PBR1_IX_RNA_013_trimmed_Aligned.sortedByCoord.out.bam ${path}16_thu159PBR2_IX_RNA_016_trimmed_Aligned.sortedByCoord.out.bam ${path}16_thu166PBR2_IX_RNA_016_trimmed_Aligned.sortedByCoord.out.bam ${path}16_thu167PBR2_IX_RNA_016_trimmed_Aligned.sortedByCoord.out.bam ${path}16_thu188PBR2_IX_RNA_016_trimmed_Aligned.sortedByCoord.out.bam ${path}16_thu191PBR2_IX_RNA_016_trimmed_Aligned.sortedByCoord.out.bam ${path}19_thu160PBR3_IX_RNA_003_trimmed_Aligned.sortedByCoord.out.bam ${path}19_thu166PBR3_IX_RNA_003_trimmed_Aligned.sortedByCoord.out.bam ${path}19_thu167PBR3_IX_RNA_003_trimmed_Aligned.sortedByCoord.out.bam ${path}19_thu188PBR3_IX_RNA_003_trimmed_Aligned.sortedByCoord.out.bam ${path}19_thu190PBR3_IX_RNA_003_trimmed_Aligned.sortedByCoord.out.bam ${path}22_thu160PBR4_IX_RNA_006_trimmed_Aligned.sortedByCoord.out.bam ${path}22_thu165PBR4_IX_RNA_006_trimmed_Aligned.sortedByCoord.out.bam ${path}22_thu168PBR4_IX_RNA_006_trimmed_Aligned.sortedByCoord.out.bam ${path}22_thu189PBR4_IX_RNA_006_trimmed_Aligned.sortedByCoord.out.bam
+
+wait

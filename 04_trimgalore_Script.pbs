@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#PBS -N 04_trimgalore
+#PBS -l walltime=24:00:00
+#PBS -l ncpus=32
+#PBS -l mem=100GB
+#PBS -e myprog_04MonocultureTrimgaloreBR2_Output.err
+#PBS -o myprog_04MonocultureTrimgaloreBR2_Output.out
+#PBS -q bix
+#PBS -M 21802475@sun.ac.za
+#PBS -m abe
+
+cd $PBS_O_WORKDIR
+
+module load app/TrimGalore!
+module load app/fastqc
+
+trim_galore --fastqc *.fastq.gz
+
